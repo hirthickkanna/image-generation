@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        async function generateImage() {
+            const prompt = document.getElementById("prompt").value;
+            const token = "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"; // Replace with your token
+            const url = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2";
+            
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ "inputs": prompt })
+            });
+            
+            if (response.ok) {
+                const blob = await response.blob();
+                document.getElementById("result").src = URL.createObjectURL(blob);
+            } else {
+                alert("Error generating image. Try again.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Image Generator</h1>
+        <input type="text" id="prompt" placeholder="Enter prompt">
+        <button onclick="generateImage()">Generate</button>
+        <div class="image-container">
+            <img id="result" alt="Generated Image">
+        </div>
+    </div>
+</body>
+</html>
